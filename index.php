@@ -1,15 +1,48 @@
 <?php
 include_once 'dbconnection.php';
 ?>
-
 <head>
    <link href="styles.css" type="text/css" rel="stylesheet" />
 </head>
 <body>
-    <h3>Shopping List</h3>
-    <p>add recipe</p>
+    <h3>Recipes</h3>
+  
+    <form method="post" action="groceries_list.php" name="selected_recipe"> 
+        <label for="recipe_id">Enter Recipe Name</label> 
+        <select name="recipe_id" id="recipe_id">
+            <?php
+                include 'display_recipe_names.php';
+            ?>
+        </select> 
+        <label for="number_pple">For: </label>
+        <input type="number" name="number_pple" value=2 />
+        <input type="submit" name="submit_groceries_list" value="To the shopping list and instructions" />
+    </form> 
+    
+    <script>
+        function ConfirmDelete(){
+            document.getElementById('delete_recipe_name').addEventListener('click', ()=>{
+                var x = confirm("Are you sure you want to delete?");
+                if (x)
+                    return true;
+                else
+                    return false;
+                });
+        }
+    </script>
 
-
+    <form method="post" name="delete_recipe" action="">
+        <label for="delete_recipe_name">Recipe</label>
+        <select name="delete_recipe_name" id="delete_recipe_name">
+            <?php
+                include 'display_recipe_names.php';
+            ?>
+        </select> 
+        <input type="submit" value="Delete" Onclick="return ConfirmDelete();" />
+    </form>  
+    <?php 
+        include_once 'delete_recipe_from_db.php';
+    ?>
     <a href="add_recipe.php">Add New Recipe</a>
 </body>
 
