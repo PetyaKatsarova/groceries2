@@ -11,7 +11,7 @@ if(isset($_POST['submit_groceries_list'])){
     $stmt = $db->query("SELECT link.ingredient_id, link.recipe_id, link.quantity, link.measurement, recipes.recipe_name, recipes.instructions, ingredients.ingredient_name FROM link LEFT JOIN ingredients ON link.ingredient_id=ingredients.ingredient_id LEFT JOIN recipes ON link.recipe_id=recipes.recipe_id WHERE link.recipe_id='". $recipe_id ."' ");
    
 
-    $recipe_name = 'Did you add ingredients and quantity to the recipe? ';
+    $recipe_name = 'Did you add ingredients and quantity to the recipe ';
     $info = "<ul>";
     if($stmt->num_rows > 0){
         while($row=$stmt->fetch_assoc()){
@@ -20,7 +20,7 @@ if(isset($_POST['submit_groceries_list'])){
                 $m = $row['measurement'];
             }
             $recipe_name = $row['recipe_name'];
-            $info .= "<li>" . $row['ingredient_name'] . ": " . $row['quantity'] . " " . $m . "</li>";
+            $info .= "<li>" . $row['ingredient_name'] . ": " . (intval($row['quantity'])*$num) . " " . $m . "</li>";
         }
     }
     $info .= "</ul>";
@@ -29,3 +29,5 @@ if(isset($_POST['submit_groceries_list'])){
 ?>
 <h3><?php echo ucfirst($recipe_name) . " for $num"; ?></h3>
 <?php echo $info; ?>
+<a href="index.php">Return to main menu</a><br/>
+<a href="add_recipe.php">Add New Recipe</a>
