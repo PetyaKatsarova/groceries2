@@ -1,0 +1,12 @@
+b*{
+    text-align: center;
+    color:rgb(177, 173, 219);
+}
+form{
+    padding: 10px 0;
+    background-color: rgb(245, 245, 239);
+    color: rgb(177, 173, 219);
+}
+ul{
+    list-style-type: none;
+}
