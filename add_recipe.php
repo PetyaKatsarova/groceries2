@@ -2,7 +2,8 @@
 include_once 'dbconnection.php';
 include_once 'add_recipe_logic.php';
 ?>
-<!-- add recipe to the recipe first form -->
+
+<!-- first form: add recipe to the recipes table -->
 <head>
     <link href="styles.css" type="text/css" rel="stylesheet" />
 </head>
@@ -46,49 +47,14 @@ include_once 'add_recipe_logic.php';
     <input type="submit" value="Add Ingredients to the recipe" name="add_to_link" />
 </form>
 
-    <!-- // make an arr with recipe_ids in link table
-    // $link_recipe = $db->query("SELECT recipe_id FROM link");
-
-    // while($row=$link_recipe->fetch_assoc()){
-    //     array_push($link_recipes_id, $row['recipe_id']);
-    // }
-
-    // foreach($link_recipes_id as $id){
-    //     if($_POST['recipe_for_link'] === $id){
-    //         $notDublicatedRecipeName = false;
-    //     }
-    // } -->
-
-<!-- third form: add ingredients to the list -->
+<!-- third form: add ingredients to the ingredients table -->
 <form method="post" action="">
     <label for="new_ingredient">Add Ingredient To The List</label>
     <input type="text" name="new_ingredient" />
     <input type="submit" value="Submit" />
 </form>
-<!-- logic to add new ingredient to ingredients table -->
-<?php
-// to recycle in forms: delete and select recipe to add ingredients
-;
 
-$new_ingredient = isset($_POST['new_ingredient']) ? $_POST['new_ingredient'] : false;
-$stmt2 = false;
-if(!empty($new_ingredient)){
-    if (!in_array($new_ingredient, $ingrs)) {
-        $stmt2 = $db->query("INSERT INTO ingredients (ingredient_name)
-                       VALUES ('" . $new_ingredient . "')");
-    }else{
-        echo "The ingredient exist in the databes, select it from the list above.";
-    }
-}
-if($stmt2 === TRUE){
-    echo "New record created successfully";
-} else {
-    // echo "Error: " . $new_ingredient . "<br>" . $db->error;
-
-};
-
-?>
-<!-- delete ingredient -->
+<!-- delete ingredient from ingredients table -->
 <form method="post">
     <label for="delete_ingredient">Delete Ingredient From The List</label>
         <select name="delete_ingredient" id="delete_ingredient">
@@ -104,15 +70,5 @@ if($stmt2 === TRUE){
         <input type="submit" name="submitted_delete_ingredient" />
 </form>
 <a href="index.php">Return to main menu</a>
-<!-- delete ingredient from ingredients table -->
-<?php 
-   
-if(isset($_POST['delete_ingredient'])){
-    $del_ingredient = $_POST['delete_ingredient'];
-    $del = $db->query("DELETE FROM ingredients WHERE ingredient_id = '". $del_ingredient ."'");
-    if($del){
-        echo 'Ingredient successfully deleted';
-    }
-}
-?>
+
 

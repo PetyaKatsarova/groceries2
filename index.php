@@ -1,6 +1,7 @@
 <?php
 include_once 'dbconnection.php';
 ?>
+
 <head>
    <link href="styles.css" type="text/css" rel="stylesheet" />
 </head>
@@ -18,19 +19,7 @@ include_once 'dbconnection.php';
         <input type="number" name="number_pple" value=2 />
         <input type="submit" name="submit_groceries_list" value="To the shopping list and instructions" />
     </form> 
-    
-    <script>
-        function ConfirmDelete(){
-            document.getElementById('delete_recipe_name').addEventListener('click', ()=>{
-                var x = confirm("Are you sure you want to delete?");
-                if (x)
-                    return true;
-                else
-                    return false;
-                });
-        }
-    </script>
-
+  
     <form method="post" name="delete_recipe" action="">
         <label for="delete_recipe_name">Recipe</label>
         <select name="delete_recipe_name" id="delete_recipe_name">
@@ -38,7 +27,7 @@ include_once 'dbconnection.php';
                 include 'display_recipe_names.php';
             ?>
         </select> 
-        <input type="submit" value="Delete" Onclick="return ConfirmDelete();" />
+        <input type="submit" value="Delete" />
     </form>  
     <?php 
         include_once 'delete_recipe_from_db.php';
