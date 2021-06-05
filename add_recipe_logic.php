@@ -53,15 +53,6 @@ if(isset($_POST['submit_add_new_recipe'])){
 $link_ids = [];
 $notDublicatedRecipeIngredient = true;
 
-//make sure there r no dublicates ingredients for the same recipe in the link table
-$link_ingredient = $db->query("SELECT recipe_id, ingredient_id FROM link");
-
-while($row=$link_ingredient->fetch_assoc()){
-    $temp = [intval($row['recipe_id']), intval($row['ingredient_id'])];
-    // $temp[$row['recipe_id']] = $row['ingredient_id'];
-    array_push($link_ids, $temp);
-}
-
 if(isset($_POST['add_to_link']) && isset($_POST['quantity']) && (!empty($_POST['quantity']))){
 
     $ingredient = intval($_POST['ingredient_for_link']);
@@ -69,21 +60,25 @@ if(isset($_POST['add_to_link']) && isset($_POST['quantity']) && (!empty($_POST['
     $quantity = $_POST['quantity'];
     $measurement = $_POST['measurement'];
 
-    var_dump($link_ids);
+
+    //make sure there r no dublicates ingredients for the same recipe in the link table
+    $link_ingredient = $db->query("SELECT recipe_id, ingredient_id FROM link");
+
+    while($row=$link_ingredient->fetch_assoc()){
+        $temp = [intval($row['recipe_id']), intval($row['ingredient_id'])];
+        // $temp[$row['recipe_id']] = $row['ingredient_id'];
+        array_push($link_ids, $temp);
+    }
    
     for($i=0; $i<count($link_ids); $i++){
-        var_dump($link_ids[$i]);
-     //   if(($links_id[$i][0] === $recipe) &&($link_ids[$i][1] === $ingredient)){
-        // foreach($link_ids[$i] as $rec=>$ingr){
-        //     echo "$rec => $ingr </br>";
-        //     var_dump(is_int($rec));
-        //     echo(' // ');
-        //     var_dump(is_int($recipe));
-        //     if(($recipe === $rec) && ($ingredient === $ingr)){
-            //    $notDublicatedRecipeIngredient = false;
-             //    break;                
-         //}
-        // }
+        for($j=0; $j<count($link_ids[$i])-1; $j+=2){
+            var_dump($link_ids[$i][$j]);
+            if(($link_ids[$i][$j] === $recipe) && ($link_ids[$i][$j+1] === $ingredient)){
+                $notDublicatedRecipeIngredient = false;
+                echo "You already have this ingredient in this recipe list";
+                break;   
+            }             
+        }
     }
      //add ingr, measurement, quant to recipe in link
      if($notDublicatedRecipeIngredient){
