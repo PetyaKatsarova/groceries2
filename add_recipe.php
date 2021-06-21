@@ -10,9 +10,12 @@ include_once 'add_recipe_logic.php';
 <h3>Add Recipe And/Or Ingredient</h3>
 
 <form method="post" >
-    <label for="add_recipe">Name</label>
+    <label for="add_recipe">Recipe Name</label>
     <input type="text" name="add_recipe" id="add_recipe" />
-    <textarea name="instructions" name="instructions" placeholder="Add instructions"></textarea>
+    <label for="instructions">Instructions</label>
+    <textarea name="instructions" name="instructions"></textarea>
+    <label for="cook_time">Cooking Time In Min</label>
+    <input type="number" name="cook_time" />
     <input type="submit" value="Add New Recipe Name" name="submit_add_new_recipe" />
 </form> 
 
@@ -42,9 +45,22 @@ include_once 'add_recipe_logic.php';
 
     <label for="quantity">Quantity: </label>
     <input type="number" name="quantity" />
-    <label for="measurement">Enter measurement:</label>
+    <label for="measurement">Measurement:</label>
     <input type="text" name="measurement" />
     <input type="submit" value="Add Ingredients to the recipe" name="add_to_link" />
+
+    <div>
+    <select name="delete_ingredient_from_recipe" id="delete_ingredient_from_recipe">
+            <?php
+            foreach($ingrs as $key=>$val){
+            ?>
+                <option value="<?php echo $key ?>" ><?php echo $val ?></option>;
+            <?php
+    }
+            ?>
+        </select> 
+    <input type="submit" value="Delete Ingredients from the recipe" name="delete_from_link" />
+    </div>
 </form>
 
 <!-- third form: add ingredients to the ingredients table -->

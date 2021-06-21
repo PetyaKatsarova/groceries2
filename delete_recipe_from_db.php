@@ -1,9 +1,3 @@
-<script>
-  document.getElementById('delete_recipe_name').addEventListener('click', ()=>{
-      ('Are you sure you want to delete this recipe?');
-  });
-</script>
-
 <?php
 include_once 'dbconnection.php';
 
@@ -11,8 +5,11 @@ $option = isset($_POST['delete_recipe_name']) ? $_POST['delete_recipe_name'] : f
 
 if($option){
     $id = $_POST['delete_recipe_name'];
-    $sql = "DELETE from recipes WHERE recipe_id = '". $id ."'";
-    if ($db->query($sql) === TRUE) {
+    $sql = "DELETE from recipes WHERE recipe_id = ?";
+    $stmt5 = $db->prepare($sql);
+    $stmt5->bind_param('i', $id);
+
+    if ($stmt5->execute() === TRUE) {
         echo "Record deleted successfully";
     } else {
         echo "Error deleting record: " . $db->error;

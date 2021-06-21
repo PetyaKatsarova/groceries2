@@ -18,13 +18,17 @@ $new_ingredient = isset($_POST['new_ingredient']) ? $_POST['new_ingredient'] : f
 $stmt2 = false;
 if(!empty($new_ingredient)){
     if (!in_array($new_ingredient, $ingrs)) {
-        $stmt2 = $db->query("INSERT INTO ingredients (ingredient_name)
-                       VALUES ('" . $new_ingredient . "')");
+        $stmt2 = $db->prepare("INSERT INTO ingredients (ingredient_name)
+                       VALUES (?)");
+       $stmt2->bind_param('s', $new_ingredient);
+       $stmt2->execute(); 
+        // $stmt2 = $db->query("INSERT INTO ingredients (ingredient_name)
+        //                VALUES ('". $new_ingredient ."')");                    
     }else{
         echo "The ingredient exist in the databes, select it from the list above.";
     }
 }
-if($stmt2 === TRUE){
+if($stmt2){
     echo "New record created successfully";
 } else {
     // echo "Error: " . $new_ingredient . "<br>" . $db->error;
@@ -35,9 +39,24 @@ if($stmt2 === TRUE){
 
 if(isset($_POST['delete_ingredient'])){
     $del_ingredient = $_POST['delete_ingredient'];
-    $del = $db->query("DELETE FROM ingredients WHERE ingredient_id = '". $del_ingredient ."'");
+    $del = $db->prepare("DELETE FROM ingredients WHERE ingredient_id = ?");
+    $del->bind_param('s', $del_ingredient);
+    $del->execute(); 
+
     if($del){
         echo 'Ingredient successfully deleted';
+    }
+}
+
+//delete ingredient from the recipe
+if(isset($_POST['delete_from_link'])){
+    $del_ingredient = $_POST['delete_ingredient_from_recipe'];
+    $del = $db->prepare("DELETE FROM link WHERE ingredient_id = ?");
+    $del->bind_param('i', $del_ingredient);
+    $del->execute();
+    
+    if($del){
+        echo 'Ingredient successfully deleted from the recipe';
     }
 }
 
@@ -51,12 +70,13 @@ while($row=$st->fetch_assoc()){
 }
 ksort($recipe_names);
 
-// add recipe name to recipe table 
+// add recipe name, instructions, cook_time to recipes table 
 
 if(isset($_POST['submit_add_new_recipe'])){
     $name = strtolower($_POST['add_recipe']);
     $instructions= $_POST['instructions'];
     $ingredients = [];
+    $cook_time = $_POST['cook_time'];
 
 
     // checking if the new recipe is in the recipes table:
@@ -67,12 +87,13 @@ if(isset($_POST['submit_add_new_recipe'])){
             $isDub = true;
         }
     }
-    if(empty($name) || empty($instructions)){
-        echo 'Please enter recipe name and/or instructions';
+    if(empty($name) || empty($instructions) || empty($cook_time)){
+        echo 'Please enter recipe name and/or instructions and/or cooking time';
     }else{
         if($isDub === false){
-            $q = "INSERT INTO recipes (recipe_name, instructions)
-            VALUES('". $name ."', '". $instructions ."')";
+            $q = "INSERT INTO recipes (recipe_name, instructions, cook_time)
+            VALUES('". $name ."', '". $instructions ."', '". $cook_time ."')";
+            
             if ($db->query($q) === TRUE) {
                 echo "New recipe created successfully";
             } else {
@@ -132,6 +153,6 @@ if(isset($_POST['add_to_link']) && isset($_POST['quantity']) && (!empty($_POST['
             }
         }
     }else{
-        echo "You have already this recipe in the recipes database or the same recipe in this recipe already";
+        echo "You have already this recipe in the recipes database or the same ingredient in this recipe";
     }
 }
